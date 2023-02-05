@@ -3,15 +3,16 @@ NAME = ft_container
 RM = rm -rf 
 
 SRC = main.cpp
+HEADER =  vector/vector.hpp iterator/iterator.hpp
 
 OBJC = $(SRC:.cpp=.o)
 
-CC = c++ -Wall -Wextra -Werror  -std=c++98
+CC = c++ -Wall -Wextra -Werror  -std=c++98 -g
 
-$(NAME): $(OBJC) vector/vector.hpp
+$(NAME): $(OBJC) ${HEADER}
 	$(CC)  $(OBJC) -o $(NAME)
 
-%.o:%.cpp vector/vector.hpp
+%.o:%.cpp ${HEADER}
 	$(CC) -c $< -o $@
 all: $(NAME)
 clean :
