@@ -6,7 +6,7 @@
 /*   By: yoelhaim <yoelhaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 21:28:53 by yoelhaim          #+#    #+#             */
-/*   Updated: 2023/02/02 19:45:52 by yoelhaim         ###   ########.fr       */
+/*   Updated: 2023/02/05 22:15:39 by yoelhaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,58 @@
 //  namespace  std
 
 // namespace ft = std;
-void check()
-{
-    system("leaks ft_container");
-    // std::cout << "bye";
-}
+// void check()
+// {
+//     system("leaks ft_container");
+//     // std::cout << "bye";
+// }
+
+// class A {
+    
+//   private:
+//     A()
+//     {
+//         std::cout << "hello from A" << '\n';
+//     }
+
+//     friend class B;
+// };
+
+// class B {
+//   public:
+//     int a;
+//     void begin()
+//     {
+//         A a;
+//     }
+// };
+
 int main()
 {
+    ft::vector <int > test (10,7);
+    // ft::vector<int> data2(test.begin(), test.end());
+    // ft::vector<int> data(5,9);
+    // ft::vector<int> data1(1,6);
+    // data.push_back(2);
+    // data.push_back(4);
+    // data.push_back(3);
+    // data.push_back(4);
+//    data1.swap(data);
+    
+// ft::vector<int>::iterator p = data.begin();
+// // ft::vector<int>::iterator p1 = data.begin();
+// // p1++;
+// std::cout<<"sizeeeeee=> " << data2.size() << std::endl;
+// std::cout << *p1 + *p << std::endl;
+//      int i=0;
+//      std::cout<< p[i] ;
+//   while( p < data.end())
+//   {
+//     std::cout << i  + 1<< "   ";
+//     std::cout << *p<< std::endl;
+//     i++;
+//     p++;
+//   }
     // ft::vector<int> s;
     // ft::vector<int> s2;
     // s2.push_back(1); // s1  c1
@@ -92,15 +137,6 @@ int main()
 
     // std::cout << "the vector is empty ? : " << capacity.empty() << std::endl;
 
-    //! test shrink-fill
-//    ft::vector<int> myvector (100);
-//   std::cout << "1. capacity of myvector: " << myvector.capacity() << '\n';
-
-//   myvector.resize(10);
-//   std::cout << "2. capacity of myvector: " << myvector.capacity() << '\n';
-
-//   myvector.shrink_to_fit();
-//   std::cout << "3. capacity of myvector: " << myvector.capacity() << '\n';
 
 
 //operator []
@@ -122,22 +158,87 @@ int main()
 //         std::cerr << e.what() << '\n';
 //     }
 //data
-    ft::vector<int> myvector (5, 10);
-   int* p = myvector.data();
+//     ft::vector<int> myvector (5, 10);
+//    int* p = myvector.data();
 
-    *p = 10;
-    ++p;
-    *p = 20;
-     p[2] = 100;
-    myvector.resize(10, 7);
+//     *p = 10;
+//     ++p;
+//     *p = 20;
+//      p[2] = 100;
+//     myvector.resize(10, 7);
 
-  std::cout << "myvector contains:";
-  for (unsigned i=0; i<myvector.size(); ++i)
-    std::cout << ' ' << myvector[i];
-  std::cout << '\n';
+//   std::cout << "myvector contains:";
+//   for (unsigned i=0; i<myvector.size(); ++i)
+//     std::cout << ' ' << myvector[i];
+//   std::cout << '\n';
 
 //    system("leaks ft_container");
 //   atexit(check);
-  return 0;
+
+
+// copy
+    // ft::vector<int> a1(5,10);
+    // ft::vector<int> a2(a1);
+    
+
+    // for (size_t i = 0; i < a1.size(); i++)
+    // {
+    //     std::cout << " "<< a2[i];
+    // }
+
+    //   for (size_t i = 0; i < a1.size(); i++)
+    // {
+    //     std::cout << " "<< a1[i];
+    // }
+
+    //swap
+
+//     ft::vector<int> foo (3,100);   // three ints with a value of 100
+//   ft::vector<int> bar (5,200);  
+  
+// //  if (foo==bar) std::cout << "foo and bar are equal\n";
+//   if (foo!=bar) std::cout << "foo and bar are not equal\n";
+// //   if (foo< bar) std::cout << "foo is less than bar\n";
+// //   if (foo> bar) std::cout << "foo is greater than bar\n";
+// //   if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
+// //   if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+//    // five ints with a value of 200
+//    std::cout <<  "--------------------\n before swap\n";
+//     std::cout << foo.size() << std::endl;
+//     std::cout << bar.size()<< std::endl << "--------------------\n";
+//   foo.swap(bar);
+//        std::cout <<  "--------------------\n before swap\n";
+//     std::cout << foo.size() << std::endl;
+//     std::cout << bar.size()<< std::endl << "--------------------\n";
+
+//   ft::vector<int> foo;
+//   foo.push_back(20);
+//   foo.push_back(100);
+//   foo.push_back(70);
+//   foo.push_back(57);
+  
+//  ft::vector<int>::iterator p = foo.begin() ;
+ 
+//   std::cout << (*p-=1) << std::endl;
+//   std::cout << *p<< std::endl;
+ 
+//  int i=0;
+//   while( p < foo.end())
+//   {
+//     std::cout << i  + 1<< "   ";
+//     std::cout << *p<< std::endl;
+//     i++;
+//     p++;
+//   }
+
+
+    // std::allocator<int> myAllocator;
+ 
+    // // allocate space for five ints
+    // int* container = myAllocator.allocate(5);
+
+    // ft::vector<int>::iterator g(container);
+    
+    return 0;
   
 }
