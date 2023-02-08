@@ -6,7 +6,7 @@
 /*   By: yoelhaim <yoelhaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 21:25:24 by yoelhaim          #+#    #+#             */
-/*   Updated: 2023/02/07 23:21:26 by yoelhaim         ###   ########.fr       */
+/*   Updated: 2023/02/08 20:09:15 by yoelhaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ namespace ft
         explicit vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type())
         {
             sizeOfContainer = n;
-            capacityOfContainer = n;
+            capacityOfContainer = n * 2;
             // this->reserve(n);
             this->allocator_data = alloc;
             this->container = allocator_data.allocate(capacityOfContainer);
@@ -112,18 +112,22 @@ namespace ft
         {
         }
         // end  iterator
-        // TODO  template <class InputIterator>  void assign (InputIterator first, InputIterator last);
+        template <class InputIterator>  void assign (InputIterator first, InputIterator last)
+        {
+            sizeOfContainer = 0;
+            while (first != last)push_back(*first++);
+        }
         void assign(size_type n, const value_type &val)
         {
-
-            // allocator_data.deallocate(container, sizeOfContainer);
+            for (size_type i = 0; i < this->size(); i++)this->allocator_data.destroy(this->container + i);
+            
+            allocator_data.deallocate(container, this->capacity());
             sizeOfContainer = 0;
             for (size_type i = 0; i < n; i++)
                 this->push_back(val);
         }
         void push_back(const value_type &value)
         {
-            // std::cout << "sizeof "<< capacity() << "\n";
             if (capacity() == 0)
             {
                 container = allocator_data.allocate(1);
@@ -154,25 +158,20 @@ namespace ft
             allocator_data.destroy(&container[size() - 1]);
             sizeOfContainer--;
         }
-
-        //   uintptr_t serialize(value_type *ptr)
-        // {
-        //     return (reinterpret_cast<uintptr_t>(ptr));
-        // }
         iterator insert(iterator position, const value_type &val)
         {
             pointer tmp = allocator_data.allocate(this->capacity() + 1);
 
             iterator it = this->begin();
             iterator pos = position;
-            int i = 0;
+            size_type i = 0;
             while (it < pos)
             {
                 this->allocator_data.construct(tmp + i, *it);
                 it++;
                 i++;
             }
-            
+            size_type positionOfIter = i;
             this->allocator_data.construct(tmp + i, val);
             i++;
             while (it <= this->end())
@@ -184,9 +183,10 @@ namespace ft
             for (size_type i = 0; i < this->size(); i++)
                  allocator_data.destroy(this->container + i);
             allocator_data.deallocate(container, capacity());
+            
             this->container = tmp;
-            sizeOfContainer++;
-            return (position);
+            this->sizeOfContainer++;
+            return (this->begin() + positionOfIter);
         }
         void insert(iterator position, size_type n, const value_type &val)
         {
@@ -194,7 +194,7 @@ namespace ft
 
             iterator it = this->begin();
             iterator pos = position;
-            int i = 0;
+            size_type i = 0;
             while (it < pos)
             {
                 this->allocator_data.construct(tmp + i, *it);
@@ -230,7 +230,7 @@ namespace ft
         pointer tmp = allocator_data.allocate(this->capacity() + len);
         iterator pos = position;
         iterator it = this->begin();
-        int i = 0;
+        size_type i = 0;
         while(it != pos)
         {
             this->allocator_data.construct(tmp + i, *it);
@@ -254,13 +254,41 @@ namespace ft
         container = tmp;
         sizeOfContainer += len;
        }
-        iterator erase(iterator position)
+        iterator erase (iterator position)
         {
-            allocator_data.destroy(position + 1);
+            pointer tmp = allocator_data.allocate(this->capacity());
+            
+            iterator it = this->begin();
+            size_type i = 0;
+            for (;it  != position; it++){
+                this->allocator_data.construct(tmp + i, *it);i++;
+            }
+            size_type positionOfIter = i;
+            it++;
+            for (;it  < this->end(); it++){ this->allocator_data.construct(tmp + i, *it);i++;}
+            for (size_type i = 0; i < this->size(); i++)allocator_data.destroy(this->container + i);
+            allocator_data.deallocate(this->container, this->sizeOfContainer);
             sizeOfContainer--;
-            return (position);
+            for (size_type i = 0; i < size(); i++)this->container[i] = tmp[i];
+            return this->begin() + positionOfIter;
+            
         }
-        iterator erase(iterator first, iterator last);
+    
+       iterator erase (iterator first, iterator last)
+       {
+        pointer tmp = allocator_data.allocate(this->capacity());
+        size_type i = 0;
+        
+        while (first != last)first++;
+        iterator firstIter = last;
+        while (last != this->end()){this->allocator_data.construct(tmp+ i, *last++); i++; }
+        sizeOfContainer = i;
+        for (size_type i = 0; i < this->size(); i++)allocator_data.destroy(this->container + i);
+        allocator_data.deallocate(this->container, this->sizeOfContainer);
+        
+        for (size_type i = 0; i < size(); i++)this->container[i] = tmp[i];
+        return this->begin();
+       }
 
         void swap(vector &x)
         {
@@ -273,6 +301,8 @@ namespace ft
             allocator_data.deallocate(this->container, this->sizeOfContainer);
             sizeOfContainer = 0;
         }
+
+       
         // end  Modifiers
         // start  Element access:
         reference operator[](size_type n) const
