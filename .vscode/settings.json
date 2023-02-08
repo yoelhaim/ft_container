@@ -102,7 +102,11 @@
         "map": "cpp",
         "queue": "cpp",
         "set": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "csignal": "cpp",
+        "fstream": "cpp",
+        "iomanip": "cpp",
+        "filesystem": "cpp"
     },
     "C_Cpp.vcFormat.space.aroundAssignmentOperator": "ignore",
     "C_Cpp.vcFormat.space.beforeLambdaOpenParenthesis": true,

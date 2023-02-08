@@ -6,7 +6,7 @@
 /*   By: yoelhaim <yoelhaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 21:25:24 by yoelhaim          #+#    #+#             */
-/*   Updated: 2023/02/08 20:09:15 by yoelhaim         ###   ########.fr       */
+/*   Updated: 2023/02/08 23:16:11 by yoelhaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include <memory>
 #include <exception>
 #include "../iterator/iterator.hpp"
+#include "../iterator/iteratorTrait.hpp"
+#include "../iterator/reverseIterator.hpp"
 #include "../utils/is_integral.hpp"
 using namespace std;
 
@@ -29,9 +31,13 @@ namespace ft
         typedef size_t size_type;
         typedef ft::_Iterator<value_type> iterator;
         typedef ft::_Iterator<value_type> const_iterator;
+        typedef ft::iteratorTrait<value_type> trait;
+        
+        typedef ft::reverseIterator<value_type> reverse_iterator;
+        typedef ft::reverseIterator<value_type> const_reverse_iterator;
 
         typedef typename allocator_type::reference reference;
-        typedef typename allocator_type::const_reference const_reference;
+        typedef typename allocator_type::const_reference  const_reference;
 
         typedef typename allocator_type::pointer pointer;
         typedef typename allocator_type::const_pointer const_pointer;
@@ -47,7 +53,7 @@ namespace ft
         explicit vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type())
         {
             sizeOfContainer = n;
-            capacityOfContainer = n * 2;
+            capacityOfContainer = sizeOfContainer * 2;
             // this->reserve(n);
             this->allocator_data = alloc;
             this->container = allocator_data.allocate(capacityOfContainer);
@@ -94,6 +100,12 @@ namespace ft
         // end  Member functions
         //  start  Modifiers
         //  start itertaor
+
+        reverse_iterator rbegin()
+        {
+            return (container);
+        }
+        // TODO const_reverse_iterator rbegin() const;
 
         iterator begin()
         {
