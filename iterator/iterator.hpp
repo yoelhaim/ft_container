@@ -6,7 +6,7 @@
 /*   By: yoelhaim <yoelhaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 16:22:51 by yoelhaim          #+#    #+#             */
-/*   Updated: 2023/02/05 14:02:13 by yoelhaim         ###   ########.fr       */
+/*   Updated: 2023/02/08 13:56:52 by yoelhaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,12 @@ namespace ft
             this->_p++;
             return (*this);
         }
+        _Iterator &operator=(const _Iterator &rhs)
+        {
+            if (this != &rhs)
+                this->_p = rhs._p;
+            return *this;
+        }
         // post-decrement operator
         _Iterator operator--(int)
         {
@@ -75,10 +81,17 @@ namespace ft
             return _p + n;
         }
 
-        // Subtraction operator
         _Iterator operator-(difference_type n) const
         {
-            return (_p - n);
+            return _Iterator(_p - n);
+        }
+        difference_type operator-(const _Iterator &rhs) const
+        {
+            return (this->_p - rhs._p);
+        }
+        difference_type operator+(const _Iterator &rhs) const
+        {
+            return (this->_p + rhs._p);
         }
 
         // Equal to operator
@@ -86,11 +99,20 @@ namespace ft
         {
             return _p == other._p;
         }
+        bool operator>=(const _Iterator &other)
+        {
+            return _p >= other._p;
+        }
+        bool operator<=(const _Iterator &other)
+        {
+            return _p <= other._p;
+        }
 
         bool operator!=(const _Iterator &other) const
         {
-            return !(*this == other);
+            return (this->_p != other._p);
         }
+
         _Iterator &operator+=(difference_type n)
         {
             this->_p + n;

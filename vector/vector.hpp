@@ -6,7 +6,7 @@
 /*   By: yoelhaim <yoelhaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 21:25:24 by yoelhaim          #+#    #+#             */
-/*   Updated: 2023/02/05 22:28:36 by yoelhaim         ###   ########.fr       */
+/*   Updated: 2023/02/07 23:21:26 by yoelhaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <memory>
 #include <exception>
 #include "../iterator/iterator.hpp"
+#include "../utils/is_integral.hpp"
 using namespace std;
 
 namespace ft
@@ -54,9 +55,10 @@ namespace ft
                 this->allocator_data.construct(this->container + i, val);
         }
         template <typename InputIterator>
-        vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type()) : allocator_data(alloc)
+        vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type * = 0) : allocator_data(alloc)
         {
             this->sizeOfContainer = last - first;
+            cout << this->sizeOfContainer << endl;
             int i = 0;
             this->capacityOfContainer = last - first;
             this->container = this->allocator_data.allocate(this->capacity());
@@ -132,31 +134,133 @@ namespace ft
             if (size() == capacity())
             {
                 value_type *tmp = container;
+                // reserve(capacity() * 2);
+                capacityOfContainer = capacityOfContainer * 2;
                 tmp = allocator_data.allocate(capacity() * 2);
                 size_type i = -1;
                 while (++i <= size())
-                {
                     this->allocator_data.construct(tmp + i, container[i]);
-                }
-                allocator_data.deallocate(container, size());
+
+                allocator_data.deallocate(container, capacity());
                 tmp[i - 1] = value;
                 container = tmp;
                 sizeOfContainer++;
             }
             else
-            {
                 container[sizeOfContainer++] = value;
-            }
         }
         void pop_back()
         {
             allocator_data.destroy(&container[size() - 1]);
             sizeOfContainer--;
         }
-        // TODO iterator insert (iterator position, const value_type& val);
-        // TODO  void insert (iterator position, size_type n, const value_type& val);
-        // TODO template <class InputIterator>    void insert (iterator position, InputIterator first, InputIterator last);
-        // TODO iterator erase (iterator position);iterator erase (iterator first, iterator last);
+
+        //   uintptr_t serialize(value_type *ptr)
+        // {
+        //     return (reinterpret_cast<uintptr_t>(ptr));
+        // }
+        iterator insert(iterator position, const value_type &val)
+        {
+            pointer tmp = allocator_data.allocate(this->capacity() + 1);
+
+            iterator it = this->begin();
+            iterator pos = position;
+            int i = 0;
+            while (it < pos)
+            {
+                this->allocator_data.construct(tmp + i, *it);
+                it++;
+                i++;
+            }
+            
+            this->allocator_data.construct(tmp + i, val);
+            i++;
+            while (it <= this->end())
+            {
+                  this->allocator_data.construct(tmp + i, *it);
+                 it++;
+                 i++;
+            }
+            for (size_type i = 0; i < this->size(); i++)
+                 allocator_data.destroy(this->container + i);
+            allocator_data.deallocate(container, capacity());
+            this->container = tmp;
+            sizeOfContainer++;
+            return (position);
+        }
+        void insert(iterator position, size_type n, const value_type &val)
+        {
+            pointer tmp = allocator_data.allocate(capacity() + n);
+
+            iterator it = this->begin();
+            iterator pos = position;
+            int i = 0;
+            while (it < pos)
+            {
+                this->allocator_data.construct(tmp + i, *it);
+                it++;
+                i++;
+            }
+            size_type tmpn = n;
+            while (tmpn > 0)
+            {
+                tmp[i] = val;
+               this->allocator_data.construct(tmp + i, val);
+               tmpn--;
+               i++;
+            }
+            while (it <= this->end())
+            {
+                tmp[i] = container[i];
+                  this->allocator_data.construct(tmp + i, *it);
+                 it++;
+                 i++;
+            }
+            
+            for (size_type i = 0; i < this->size(); i++)
+                 allocator_data.destroy(this->container + i);
+            allocator_data.deallocate(container, size());
+            this->container = tmp;
+            sizeOfContainer+=n;
+        }
+       template <class InputIterator>
+       void insert (iterator position, InputIterator first, InputIterator last,typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type * = 0)
+       {
+        int len = (last- first);
+        pointer tmp = allocator_data.allocate(this->capacity() + len);
+        iterator pos = position;
+        iterator it = this->begin();
+        int i = 0;
+        while(it != pos)
+        {
+            this->allocator_data.construct(tmp + i, *it);
+            it++;
+            i++;
+        }
+        while (first != last)
+        {
+           this->allocator_data.construct(tmp + i, *first);
+           first++;
+           i++;
+        }
+        while (it < this->end())
+        {
+           this->allocator_data.construct(tmp + i, *it);
+           it++;
+           i++;
+        }
+        for (size_type i = 0; i < size(); i++)allocator_data.destroy(this->container + i);
+        allocator_data.deallocate(container, capacity());
+        container = tmp;
+        sizeOfContainer += len;
+       }
+        iterator erase(iterator position)
+        {
+            allocator_data.destroy(position + 1);
+            sizeOfContainer--;
+            return (position);
+        }
+        iterator erase(iterator first, iterator last);
 
         void swap(vector &x)
         {
@@ -169,8 +273,6 @@ namespace ft
             allocator_data.deallocate(this->container, this->sizeOfContainer);
             sizeOfContainer = 0;
         }
-        // TODO template <class... Args>iterator emplace (const_iterator position, Args&&... args);
-        // TODO template <class... Args>  void emplace_back (Args&&... args);
         // end  Modifiers
         // start  Element access:
         reference operator[](size_type n) const
@@ -261,8 +363,10 @@ namespace ft
 }
 
 template <class T, class Alloc>
-bool operator==(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs);
-
+bool operator==(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+{
+    return (lhs.size() == rhs.size());
+}
 template <class T, class Alloc>
 bool operator!=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
 {
@@ -273,6 +377,11 @@ template <class T, class Alloc>
 bool operator<(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
 {
     return (lhs < rhs);
+}
+template <class T, class Alloc>
+bool operator-(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+{
+    return (lhs.size() - rhs.size());
 }
 
 template <class T, class Alloc>
