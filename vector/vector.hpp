@@ -6,7 +6,7 @@
 /*   By: yoelhaim <yoelhaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 21:25:24 by yoelhaim          #+#    #+#             */
-/*   Updated: 2023/02/08 23:16:11 by yoelhaim         ###   ########.fr       */
+/*   Updated: 2023/02/09 20:33:33 by yoelhaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 #include <memory>
 #include <exception>
 #include "../iterator/iterator.hpp"
-#include "../iterator/iteratorTrait.hpp"
-#include "../iterator/reverseIterator.hpp"
+// #include "../iterator/iteratorTrait.hpp"
+// #include "../iterator/reverseIterator.hpp"
 #include "../utils/is_integral.hpp"
 using namespace std;
 
@@ -31,10 +31,10 @@ namespace ft
         typedef size_t size_type;
         typedef ft::_Iterator<value_type> iterator;
         typedef ft::_Iterator<value_type> const_iterator;
-        typedef ft::iteratorTrait<value_type> trait;
+        // typedef ft::iteratorTrait<value_type> trait;
         
-        typedef ft::reverseIterator<value_type> reverse_iterator;
-        typedef ft::reverseIterator<value_type> const_reverse_iterator;
+        // typedef ft::reverseIterator<value_type> reverse_iterator;
+        // typedef ft::reverseIterator<value_type> const_reverse_iterator;
 
         typedef typename allocator_type::reference reference;
         typedef typename allocator_type::const_reference  const_reference;
@@ -53,7 +53,7 @@ namespace ft
         explicit vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type())
         {
             sizeOfContainer = n;
-            capacityOfContainer = sizeOfContainer * 2;
+            capacityOfContainer = sizeOfContainer ;
             // this->reserve(n);
             this->allocator_data = alloc;
             this->container = allocator_data.allocate(capacityOfContainer);
@@ -101,10 +101,10 @@ namespace ft
         //  start  Modifiers
         //  start itertaor
 
-        reverse_iterator rbegin()
-        {
-            return (container);
-        }
+        // reverse_iterator rbegin()
+        // {
+        //     return (container);
+        // }
         // TODO const_reverse_iterator rbegin() const;
 
         iterator begin()
@@ -124,9 +124,12 @@ namespace ft
         {
         }
         // end  iterator
-        template <class InputIterator>  void assign (InputIterator first, InputIterator last)
+        template <class InputIterator>  void assign (InputIterator first, InputIterator last,typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type * = 0)
         {
+            this->allocator_data.deallocate(this->container, this->size());
+            for (size_type i = 0; i < this->size(); i++)this->allocator_data.destroy(this->container + i);
             sizeOfContainer = 0;
+            capacityOfContainer = 0;
             while (first != last)push_back(*first++);
         }
         void assign(size_type n, const value_type &val)
@@ -135,6 +138,7 @@ namespace ft
             
             allocator_data.deallocate(container, this->capacity());
             sizeOfContainer = 0;
+            capacityOfContainer = 0;
             for (size_type i = 0; i < n; i++)
                 this->push_back(val);
         }
@@ -382,8 +386,15 @@ namespace ft
         }
         void reserve(size_type n)
         {
-            this->capacityOfContainer = n;
-            container = allocator_data.allocate(n);
+            pointer tmp = allocator_data.allocate(this->capacity());
+
+            for (size_type i = 0; i < size(); i++)allocator_data.construct(tmp + i, container[i]);
+
+            for (size_type i = 0; i < size(); i++)allocator_data.destroy(container + i);
+
+            allocator_data.deallocate(container, size());
+
+            container = tmp;
         }
         // end  Capacity:
         void test()
