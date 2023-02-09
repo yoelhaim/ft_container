@@ -6,7 +6,7 @@
 /*   By: yoelhaim <yoelhaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/08 22:07:34 by yoelhaim          #+#    #+#             */
-/*   Updated: 2023/02/08 23:21:35 by yoelhaim         ###   ########.fr       */
+/*   Updated: 2023/02/09 18:19:00 by yoelhaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ namespace ft
         typedef typename ft::iteratorTrait::reference reference;
         typedef typename ft::iteratorTrait::difference_type difference_type;
         typedef typename ft::iteratorTrait::value_type value_type;
-        typedef typename ft::iteratorTrait::pointer pointer;
+        typedef typename ft::iteratorTrait:: pointer;
         // typedef ft::iteratorTrait::iterator_category iterator_category;
         reverseIterator() : it(0) {}
         explicit reverseIterator(pointer it) : it(it) {}
