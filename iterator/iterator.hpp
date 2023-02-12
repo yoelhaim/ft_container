@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   iterator.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yoelhaim <yoelhaim@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pro <pro@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 16:22:51 by yoelhaim          #+#    #+#             */
-/*   Updated: 2023/02/08 13:56:52 by yoelhaim         ###   ########.fr       */
+/*   Updated: 2023/02/10 20:37:40 by pro              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ namespace ft
     public:
         typedef T *pointer;
         typedef T &reference;
-        typedef std::random_access_iterator_tag random_access_iterator;
+        typedef std::random_access_iterator_tag iterator_category;
         typedef std::ptrdiff_t difference_type;
         _Iterator() : _p(NULL) {}
         _Iterator(pointer _p) : _p(_p) {}

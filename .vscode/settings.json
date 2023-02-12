@@ -106,7 +106,12 @@
         "csignal": "cpp",
         "fstream": "cpp",
         "iomanip": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "__bits": "cpp",
+        "clocale": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "variant": "cpp"
     },
     "C_Cpp.vcFormat.space.aroundAssignmentOperator": "ignore",
     "C_Cpp.vcFormat.space.beforeLambdaOpenParenthesis": true,

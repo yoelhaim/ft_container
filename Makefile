@@ -3,7 +3,7 @@ NAME = ft_container
 RM = rm -rf 
 
 SRC = main.cpp
-HEADER =  vector/vector.hpp iterator/iterator.hpp
+HEADER =  vector/vector.hpp iterator/iterator.hpp iterator/reverseIterator.hpp
 
 OBJC = $(SRC:.cpp=.o)
 

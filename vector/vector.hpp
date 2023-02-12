@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yoelhaim <yoelhaim@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pro <pro@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 21:25:24 by yoelhaim          #+#    #+#             */
-/*   Updated: 2023/02/09 20:33:33 by yoelhaim         ###   ########.fr       */
+/*   Updated: 2023/02/10 22:59:31 by pro              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 #include <memory>
 #include <exception>
 #include "../iterator/iterator.hpp"
-// #include "../iterator/iteratorTrait.hpp"
-// #include "../iterator/reverseIterator.hpp"
+#include "../iterator/iteratorTrait.hpp"
+#include "../iterator/reverseIterator.hpp"
 #include "../utils/is_integral.hpp"
 using namespace std;
 
@@ -29,19 +29,19 @@ namespace ft
         typedef Alloc allocator_type;
         typedef T value_type;
         typedef size_t size_type;
-        typedef ft::_Iterator<value_type> iterator;
-        typedef ft::_Iterator<value_type> const_iterator;
-        // typedef ft::iteratorTrait<value_type> trait;
+        typedef typename ft::_Iterator<value_type> iterator;
+        typedef typename ft::_Iterator<value_type> const_iterator;
+        typedef typename ft::iteratorTrait<iterator>::difference_type difference_type;
         
-        // typedef ft::reverseIterator<value_type> reverse_iterator;
-        // typedef ft::reverseIterator<value_type> const_reverse_iterator;
+        typedef ft::reverseIterator<iterator> reverse_iterator;
+        typedef ft::reverseIterator<const_iterator> const_reverse_iterator;
 
         typedef typename allocator_type::reference reference;
         typedef typename allocator_type::const_reference  const_reference;
 
         typedef typename allocator_type::pointer pointer;
         typedef typename allocator_type::const_pointer const_pointer;
-        typedef typename allocator_type::difference_type difference_type;
+        // typedef typename allocator_type::difference_type difference_type;
 
         // start Member functions
         explicit vector(const allocator_type &alloc = allocator_type()) : allocator_data(alloc)
@@ -101,10 +101,14 @@ namespace ft
         //  start  Modifiers
         //  start itertaor
 
-        // reverse_iterator rbegin()
-        // {
-        //     return (container);
-        // }
+        reverse_iterator rbegin()
+        {
+            return reverse_iterator(container  + size() -1);
+        }
+        reverse_iterator rend()
+        {
+            return reverse_iterator(container - 1 );
+        }
         // TODO const_reverse_iterator rbegin() const;
 
         iterator begin()
@@ -318,7 +322,6 @@ namespace ft
             sizeOfContainer = 0;
         }
 
-       
         // end  Modifiers
         // start  Element access:
         reference operator[](size_type n) const
@@ -388,7 +391,7 @@ namespace ft
         {
             pointer tmp = allocator_data.allocate(this->capacity());
 
-            for (size_type i = 0; i < size(); i++)allocator_data.construct(tmp + i, container[i]);
+            for (size_type i = 0; i < n; i++)allocator_data.construct(tmp + i, container[i]);
 
             for (size_type i = 0; i < size(); i++)allocator_data.destroy(container + i);
 
